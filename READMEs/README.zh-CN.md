@@ -168,9 +168,6 @@ Understand Anything 是一个 [Claude Code Plugin](https://code.claude.com/docs/
 # 直接重跑即可 —— 默认增量更新，只分析变更的文件
 /understand
 
-# 安装 post-commit 钩子，每次提交自动增量更新
-/understand --auto-update
-
 # 大型 monorepo？把分析范围限定到某个子目录
 /understand src/frontend
 ```
@@ -276,8 +273,6 @@ curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**保持最新：** 启用 `/understand --auto-update` —— 一个 post-commit 钩子会增量更新图谱，每次提交都能得到匹配的图谱版本。也可以在发布前手动重跑 `/understand`。
 
 **大型图谱（10 MB 以上）：** 使用 **git-lfs** 跟踪。
 

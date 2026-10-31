@@ -171,9 +171,6 @@ An interactive web dashboard opens with your codebase visualized as a graph — 
 # Re-run anytime — incremental by default (only re-analyzes changed files)
 /understand
 
-# Auto-update on every commit via a post-commit hook
-/understand --auto-update
-
 # Scope to a subdirectory (for huge monorepos)
 /understand src/frontend
 ```
@@ -286,8 +283,6 @@ The graph is just JSON — **commit it once, and teammates skip the pipeline**. 
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**Keep it fresh:** enable `/understand --auto-update` — a post-commit hook incrementally patches the graph so each commit lands with a matching graph. Or re-run `/understand` manually before releases.
 
 **Large graphs (10 MB+):** track with **git-lfs**.
 

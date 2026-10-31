@@ -8,16 +8,12 @@ const skill = readFileSync(
   resolve(__dirname, '../../../understand-anything-plugin/skills/understand/SKILL.md'),
   'utf-8',
 );
-const hook = readFileSync(
-  resolve(__dirname, '../../../understand-anything-plugin/hooks/auto-update-prompt.md'),
-  'utf-8',
-);
 const analyzer = readFileSync(
   resolve(__dirname, '../../../understand-anything-plugin/agents/file-analyzer.md'), 'utf-8',
 );
 
 describe('incremental execution contract', () => {
-  it.each([skill, hook])('routes inventory and baseline updates through bundled helpers', content => {
+  it.each([skill])('routes inventory and baseline updates through bundled helpers', content => {
     expect(content).toContain('prepare-incremental.mjs');
     expect(content).toContain('finalize-incremental.mjs');
     expect(content).toContain('filesToReanalyze');
@@ -42,7 +38,7 @@ describe('incremental execution contract', () => {
     expect(skill).toContain('jump to the `--review` graph-reviewer path in Phase 6');
   });
 
-  it.each([skill, hook])('requires deterministic symbol checking and one targeted repair', content => {
+  it.each([skill])('requires deterministic symbol checking and one targeted repair', content => {
     expect(content).toContain('incremental-symbol-baseline.json');
     expect(content).toContain('validate-incremental-symbols.mjs');
     expect(content).toContain('incremental-symbol-report.json');

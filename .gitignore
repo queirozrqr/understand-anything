@@ -19,3 +19,4 @@ venv/
 *.pyo
 Thumbs.db
 *.tgz
+node-compile-cache/

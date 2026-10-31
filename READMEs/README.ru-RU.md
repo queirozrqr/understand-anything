@@ -169,9 +169,6 @@ Understand Anything — это [плагин для Claude Code](https://code.cl
 # Перезапускайте когда угодно — по умолчанию инкрементально (только изменённые файлы)
 /understand
 
-# Установите post-commit хук для автоматических инкрементальных обновлений
-/understand --auto-update
-
 # Огромный монорепозиторий? Ограничьте анализ подкаталогом
 /understand src/frontend
 ```
@@ -277,8 +274,6 @@ curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**Держите граф в актуальном состоянии:** включите `/understand --auto-update` — post-commit хук будет инкрементально обновлять граф, так что каждый коммит сопровождается соответствующим графом. Либо запускайте `/understand` вручную перед релизами.
 
 **Большие графы (10 МБ+):** храните через **git-lfs**.
 

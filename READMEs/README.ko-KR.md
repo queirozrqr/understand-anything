@@ -168,9 +168,6 @@ Understand Anything은 [Claude Code Plugin](https://code.claude.com/docs/en/plug
 # 언제든 다시 실행 — 기본값은 증분 업데이트(변경된 파일만 재분석)
 /understand
 
-# post-commit 훅을 설치해 매 커밋마다 자동 증분 업데이트
-/understand --auto-update
-
 # 거대한 모노레포라면 하위 디렉터리로 범위 제한
 /understand src/frontend
 ```
@@ -276,8 +273,6 @@ curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**최신 상태 유지:** `/understand --auto-update` 를 활성화하면 post-commit 훅이 그래프를 증분 업데이트하여 각 커밋마다 일치하는 그래프가 유지됩니다. 또는 릴리스 전에 `/understand` 를 수동으로 다시 실행하세요.
 
 **대용량 그래프 (10 MB 이상):** **git-lfs** 로 추적합니다.
 

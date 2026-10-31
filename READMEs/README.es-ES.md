@@ -168,9 +168,6 @@ Se abre un panel web interactivo con tu código visualizado como un grafo, codif
 # Vuelve a ejecutarlo cuando quieras — incremental por defecto (solo archivos modificados)
 /understand
 
-# Instala un hook post-commit para actualizaciones incrementales automáticas
-/understand --auto-update
-
 # Acota el análisis a un subdirectorio (útil para monorepos enormes)
 /understand src/frontend
 ```
@@ -276,8 +273,6 @@ El grafo es solo JSON — **confírmalo una vez y tus compañeros se saltan el p
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**Mantenlo al día:** activa `/understand --auto-update` — un hook post-commit parchea el grafo de forma incremental, así cada commit llega con su grafo correspondiente. O vuelve a ejecutar `/understand` manualmente antes de cada release.
 
 **Grafos grandes (10 MB o más):** úsalos con **git-lfs**.
 

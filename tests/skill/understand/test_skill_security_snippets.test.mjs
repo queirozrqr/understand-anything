@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,7 +14,6 @@ describe('skill command hardening', () => {
   it('quotes PROJECT_ROOT in shell command snippets', () => {
     const files = [
       'understand-anything-plugin/skills/understand/SKILL.md',
-      'understand-anything-plugin/hooks/auto-update-prompt.md',
     ];
 
     const unsafePatterns = [
@@ -39,15 +38,6 @@ describe('skill command hardening', () => {
     expect(content).not.toMatch(/rm\s+-rf\s+<TARGET_DIR>/);
   });
 
-  it('does not rewrite metadata for generated-only commits', () => {
-    const content = readRepoFile(
-      'understand-anything-plugin/hooks/auto-update-prompt.md',
-    );
-
-    expect(content).toContain('generated-artifact-only');
-    expect(content).toContain('intentionally advances nothing for generated-only commits');
-    expect(content).toContain('Never update `meta.json` for a generated-artifact-only commit');
-  });
 
   it('quotes dashboard cd targets and GRAPH_DIR assignment', () => {
     const content = readRepoFile('understand-anything-plugin/skills/understand-dashboard/SKILL.md');
@@ -61,12 +51,48 @@ describe('skill command hardening', () => {
     expect(content).toMatch(/DASHBOARD_DIR="\$PLUGIN_ROOT\/packages\/dashboard"/);
     expect(content).toMatch(/: "\$\{PLUGIN_ROOT:\?Run step 3 first so PLUGIN_ROOT is set\}"/);
     expect(content).toMatch(/: "\$\{PROJECT_DIR:\?Run step 1 first so PROJECT_DIR is set\}"/);
-    expect(content).toMatch(/: "\$\{DASHBOARD_DIR:\?Run step 5 first so DASHBOARD_DIR is set\}"/);
-    expect(content).toMatch(/cd "\$PLUGIN_ROOT" && pnpm --filter @understand-anything\/core build/);
-    expect(content).toMatch(/cd "\$DASHBOARD_DIR" && GRAPH_DIR="\$PROJECT_DIR" npx vite/);
-    // Fast path: the viewer URL is version-pinned and both npx arguments are quoted.
-    expect(content).toMatch(/VIEWER_URL="https:\/\/github\.com\/Egonex-AI\/Understand-Anything\/releases\/download\/v\$\{PLUGIN_VERSION\}\/understand-anything-viewer\.tgz"/);
-    expect(content).toMatch(/npx --yes "\$VIEWER_URL" "\$PROJECT_DIR"/);
+    expect(content).toMatch(/: "\$\{DASHBOARD_DIR:\?Run step 4 first so DASHBOARD_DIR is set\}"/);
+    expect(content).toMatch(/cd "\$PLUGIN_ROOT" && node scripts\/verify-lockfile\.mjs "\$PLUGIN_ROOT" && pnpm install --frozen-lockfile && pnpm --filter @understand-anything\/core build/);
+    expect(content).toMatch(/cd "\$DASHBOARD_DIR" && GRAPH_DIR="\$PROJECT_DIR" pnpm exec vite --host 127\.0\.0\.1/);
+    // Supply chain: no remote prebuilt viewer, no npx, no install without the lockfile.
+    expect(content).not.toMatch(/npx\s/);
+    expect(content).not.toMatch(/VIEWER_URL/);
+  });
+
+  it('never installs dependencies outside the frozen, verified lockfile', () => {
+    for (const rel of [
+      'understand-anything-plugin/skills/understand/SKILL.md',
+      'understand-anything-plugin/skills/understand-figma/SKILL.md',
+      'understand-anything-plugin/skills/understand-dashboard/SKILL.md',
+    ]) {
+      const content = readRepoFile(rel);
+      expect(content, rel).not.toMatch(/\|\|\s*pnpm install/);
+      expect(content, rel).not.toMatch(/pnpm install(?! --frozen-lockfile)/);
+      expect(content, rel).toMatch(/verify-lockfile\.mjs/);
+    }
+  });
+
+  it('ships no auto-update hooks', () => {
+    expect(existsSync(resolve(repoRoot, 'understand-anything-plugin/hooks'))).toBe(false);
+    const skill = readRepoFile('understand-anything-plugin/skills/understand/SKILL.md');
+    expect(skill).not.toMatch(/write `\{"autoUpdate": true\}`/);
+    expect(skill).toContain('Never write `autoUpdate: true`');
+  });
+
+  it('keeps analysis artifacts out of the analyzed project\'s git history', () => {
+    const skill = readRepoFile('understand-anything-plugin/skills/understand/SKILL.md');
+    expect(skill).toContain('for entry in ".understand-anything/" ".ua/"; do');
+  });
+
+  it('restricts every agent to an explicit tool allowlist without web access', () => {
+    const dir = resolve(repoRoot, 'understand-anything-plugin/agents');
+    for (const f of readdirSync(dir).filter((n) => n.endsWith('.md'))) {
+      const content = readFileSync(resolve(dir, f), 'utf-8');
+      const tools = content.match(/^tools: (.+)$/m)?.[1];
+      expect(tools, f).toBeTruthy();
+      expect(tools, f).not.toMatch(/Web|mcp__|Agent|Task/);
+      expect(content, f).toContain('Untrusted-input rule');
+    }
   });
 
   it('marks project-controlled context as untrusted data', () => {

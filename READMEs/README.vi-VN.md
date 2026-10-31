@@ -171,9 +171,6 @@ Một dashboard web tương tác hiện ra với codebase được trực quan h
 # Chạy lại bất kỳ lúc nào — mặc định tăng dần (chỉ phân tích lại các tệp đã thay đổi)
 /understand
 
-# Tự động cập nhật sau mỗi commit qua post-commit hook
-/understand --auto-update
-
 # Giới hạn phạm vi vào một thư mục con (cho monorepo lớn)
 /understand src/frontend
 ```
@@ -286,8 +283,6 @@ Sau khi cài đặt:
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**Giữ nó luôn mới:** bật `/understand --auto-update` — một post-commit hook cập nhật dần đồ thị để mỗi commit luôn đi kèm đồ thị tương ứng. Hoặc chạy lại `/understand` thủ công trước các bản phát hành.
 
 **Đồ thị lớn (10 MB+):** theo dõi với **git-lfs**.
 

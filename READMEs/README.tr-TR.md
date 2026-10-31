@@ -169,9 +169,6 @@ Kod tabanın bir grafik olarak görselleştirilmiş, mimari katmana göre renkle
 # İstediğin zaman tekrar çalıştır — varsayılan olarak artımlıdır (yalnızca değişen dosyaları analiz eder)
 /understand
 
-# Her commit'te otomatik artımlı güncelleme için post-commit kancası kur
-/understand --auto-update
-
 # Devasa monorepo'larda analizi bir alt dizinle sınırla
 /understand src/frontend
 ```
@@ -277,8 +274,6 @@ Graf yalnızca bir JSON dosyasıdır — **bir kez commit'leyin, ekip arkadaşla
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**Güncel tutun:** `/understand --auto-update` etkinleştirin — bir post-commit kancası grafı artımlı olarak yamalar, böylece her commit eşleşen bir grafla birlikte gelir. Veya sürümden önce `/understand` komutunu elle yeniden çalıştırın.
 
 **Büyük graflar (10 MB+):** **git-lfs** ile takip edin.
 

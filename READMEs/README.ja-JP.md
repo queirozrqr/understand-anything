@@ -171,9 +171,6 @@ Understand Anything は [Claude Code Plugin](https://code.claude.com/docs/en/plu
 # いつでも再実行 —— デフォルトでインクリメンタル（変更ファイルのみ再分析）
 /understand
 
-# post-commit フックをインストールしてコミットごとに自動更新
-/understand --auto-update
-
 # 巨大なモノレポでも安心 —— サブディレクトリにスコープを絞る
 /understand src/frontend
 ```
@@ -279,8 +276,6 @@ curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/
 .ua/intermediate/
 .ua/diff-overlay.json
 ```
-
-**最新状態を保つ：** `/understand --auto-update` を有効にすると、post-commit フックがグラフを増分的に更新し、各コミットに対応するグラフが揃います。またはリリース前に `/understand` を手動で再実行します。
 
 **大きなグラフ（10 MB 以上）：** **git-lfs** で管理します。
 
